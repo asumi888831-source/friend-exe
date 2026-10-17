@@ -678,10 +678,10 @@
             xiaomingImgSrc: './assets/characters/xiaoming_normal.png',
             xiaomingSprites: {
                 normal: './assets/characters/xiaoming_normal.png',
-                smile: './assets/characters/xiaoming_normal.png',
-                worried: './assets/characters/xiaoming_normal.png',
-                surprised: './assets/characters/xiaoming_normal.png',
-                thinking: './assets/characters/xiaoming_normal.png'
+                smile: './assets/characters/xiaoming_happy.png',
+                worried: './assets/characters/xiaoming_sad.png',
+                surprised: './assets/characters/xiaoming_surprise.png',
+                thinking: './assets/characters/xiaoming_think.png'
             },
             getXiaomingFallbackSVG(mood = 'normal') {
                 this.uidCounter = (this.uidCounter + 1) % 10000;
@@ -714,7 +714,26 @@
                     <div class="xm-portrait-fallback">${fallbackSVG}</div>
                 </div>`;
             },
+            partnerSprites: {
+                nightwolf: './assets/characters/1_阿哲.png',
+                sunny: './assets/characters/2_晴晴.png',
+                rainy: './assets/characters/3_小雨.png',
+                kai: './assets/characters/4_阿凱.png',
+                an: './assets/characters/4_子安.png',
+                hao: './assets/characters/5_阿豪&沐沐.png',
+                lumi: './assets/characters/7_AI機器人.png'
+            },
             getPartnerSVG(partnerId) {
+                const imgSrc = this.partnerSprites[partnerId];
+                const fallbackSVG = this.getPartnerFallbackSVG(partnerId);
+                if (!imgSrc) return fallbackSVG;
+                return `<div class="xm-portrait-wrap">
+                    <img src="${imgSrc}" alt="角色立繪" class="xm-portrait-img"
+                         onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" />
+                    <div class="xm-portrait-fallback">${fallbackSVG}</div>
+                </div>`;
+            },
+            getPartnerFallbackSVG(partnerId) {
                 this.uidCounter = (this.uidCounter + 1) % 10000;
                 const aiCoreId = `aiCore_${this.uidCounter}`;
                 const botBodyId = `botBody_${this.uidCounter}`;
@@ -1186,6 +1205,24 @@
             renderCurrentStep() {
                 const step = this.stepQueue[this.stepIndex];
                 if (!step) return;
+                // Visual-only expression cues; choices, endings and saved progress are unchanged.
+                let xiaomingMood = 'normal';
+                if (this.phase === 'ending') {
+                    xiaomingMood = this.choice2Selected === 'A' ? 'smile' :
+                                   this.choice2Selected === 'B' ? 'thinking' : 'worried';
+                } else if (this.phase === 'scene2') {
+                    xiaomingMood = step.type === 'nova' ? 'thinking' : 'surprised';
+                } else if (step.type === 'monologue') {
+                    xiaomingMood = 'thinking';
+                } else if (this.phase === 'consequence1') {
+                    xiaomingMood = this.choice1Selected === 'A' ? 'smile' :
+                                   this.choice1Selected === 'B' ? 'thinking' : 'normal';
+                }
+                const portrait = document.getElementById('sprite-xiaoming');
+                if (portrait && portrait.dataset.mood !== xiaomingMood) {
+                    portrait.innerHTML = CharacterArt.getXiaomingSVG(xiaomingMood);
+                    portrait.dataset.mood = xiaomingMood;
+                }
                 this.updateProgressUI();
                 const monoOverlay = document.getElementById('monologue-overlay');
                 const novaBanner = document.getElementById('nova-banner');
