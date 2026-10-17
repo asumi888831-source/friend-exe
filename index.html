@@ -259,6 +259,26 @@
                 animation: none !important;
             }
         }
+
+        /* 第三階段：七道奇幻傳送門首頁背景；失去圖片時保留原本 cosmic-bg */
+        #screen-home.portal-scene-bg {
+            background-image:
+                linear-gradient(180deg, rgba(3, 7, 18, .64) 0%, rgba(3, 7, 18, .42) 35%, rgba(3, 7, 18, .68) 100%),
+                url('./assets/backgrounds/universe_hub_bg.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: #090d16;
+        }
+        #screen-home.portal-scene-bg .cosmic-grid { opacity: .18; }
+        #screen-home.portal-scene-bg .arch-portal {
+            background: linear-gradient(180deg, rgba(12, 20, 43, .72), rgba(4, 9, 23, .87));
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        @media (max-width: 640px) {
+            #screen-home.portal-scene-bg { background-position: 50% center; }
+        }
     </style>
 </head>
 <body class="relative select-none">
@@ -308,7 +328,7 @@
     </header>
 
     <!-- ==================== 1. 首頁畫面 (Home Screen：精簡聚焦於原圖下半部七道拱門宇宙舞台) ==================== -->
-    <main id="screen-home" class="relative w-full h-full flex flex-col justify-between items-center px-3 sm:px-6 pt-16 pb-4 overflow-y-auto overflow-x-hidden z-20 cosmic-bg">
+    <main id="screen-home" class="relative w-full h-full flex flex-col justify-between items-center px-3 sm:px-6 pt-16 pb-4 overflow-y-auto overflow-x-hidden z-20 cosmic-bg portal-scene-bg">
         <div class="absolute inset-0 cosmic-grid pointer-events-none"></div>
         <div class="energy-stream w-[75vw] top-[32%] -left-[10%]"></div>
         <div class="energy-stream w-[65vw] bottom-[22%] -right-[8%]" style="animation-delay: -4.5s;"></div>
